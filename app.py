@@ -1,4 +1,3 @@
-%%writefile app.py
 import streamlit as st
 import os
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -8,8 +7,6 @@ from langchain_openai import OpenAI
 from pypdf import PdfReader
 # NEW - no chains needed
 from langchain_core.prompts import PromptTemplate
-
-os.environ["OPENAI_API_KEY"] = "OPENAI_KEY" # key
 
 st.title("DocuBot - Ask Your Company Documents")
 uploaded_files = st.file_uploader("Upload PDFs", type="pdf", accept_multiple_files=True)
