@@ -1,10 +1,7 @@
 streamlit
-pypdf
-langchain-text-splitters
-langchain-huggingface
+PyMuPDF
+langchain
 langchain-community
-langchain-openai
 faiss-cpu
 sentence-transformers
-langchain
-langchain-core
+--extra-index-url https://download.pytorch.org/whl/cpu
