@@ -1,54 +1,60 @@
 import streamlit as st
-from pypdf import PdfReader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings
+from PyPDF2 import PdfReader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
-st.set_page_config(page_title="DocuBoard - RAG System")
+st.set_page_config(page_title="DocuBot - Ask Your Company Documents")
 st.title("DocuBot - Ask Your Company Documents")
+st.write("Live RAG Demo | Tech: Streamlit, LangChain, FAISS, HuggingFace")
 
-st.markdown("**Live RAG Demo | Tech: Streamlit, LangChain, FAISS, HuggingFace**")
+# Initialize session state
+if 'vectorstore' not in st.session_state:
+    st.session_state.vectorstore = None
 
-pdfs = st.file_uploader("Upload PDFs", type=["pdf"], accept_multiple_files=True)
+uploaded_files = st.file_uploader("Upload PDFs", type="pdf", accept_multiple_files=True)
 
-if pdfs:
-    text = ""
-    for pdf in pdfs:
-        reader = PdfReader(pdf)
-        for page in reader.pages:
-            text += page.extract_text() or ""
-    
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-    chunks = splitter.split_text(text)
-    
-    with st.spinner("Indexing documents..."):
-        embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-        db = FAISS.from_texts(chunks, embeddings)
-        st.session_state.db = db
-        st.success(f"✅ Indexed {len(chunks)} chunks from {len(pdfs)} PDFs! Ask below.")
+# Index ONLY if new files and not already indexed
+if uploaded_files:
+    # Check if we already indexed these exact files
+    file_names = [f.name for f in uploaded_files]
+    if 'last_files' not in st.session_state or st.session_state.last_files != file_names:
+        with st.spinner("Indexing documents..."):
+            all_texts = []
+            for pdf in uploaded_files:
+                reader = PdfReader(pdf)
+                text = ""
+                for page in reader.pages:
+                    text += page.extract_text() or ""
+                
+                splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+                chunks = splitter.split_text(text)
+                all_texts.extend(chunks)
+            
+            embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+            st.session_state.vectorstore = FAISS.from_texts(all_texts, embeddings)
+            st.session_state.last_files = file_names
+            
+        st.success(f"Indexed {len(all_texts)} chunks from {len(uploaded_files)} PDFs! Ask below.")
+    else:
+        st.success(f"Indexed {st.session_state.vectorstore.index.ntotal} chunks from {len(uploaded_files)} PDFs! Ask below.")
 
-# Ask a question
-query = st.text_input("Ask a question", placeholder="e.g., Any important words there in the PDF?")
+# Ask question
+query = st.text_input("Ask a question", placeholder="e.g., What document is this?")
 
 if query:
-    if 'vectorstore' not in st.session_state:
-        st.warning("⚠️ Please upload PDFs first")
+    if st.session_state.vectorstore is None:
+        st.warning("Please upload PDFs first")
     else:
         with st.spinner("Searching..."):
-            # Your retrieval code here
             docs = st.session_state.vectorstore.similarity_search(query, k=3)
-
-            # Build answer - as a SINGLE string, not loop
-            answer = "\n".join([doc.page_content for doc in docs[:2]])
-            source_1 = docs[0].metadata.get('source', 'Doc 1') if len(docs) > 0 else "No source"
-            source_2 = docs[1].metadata.get('source', 'Doc 2') if len(docs) > 1 else "No source"
-
-            # DISPLAY - FIXED
+            
+            # Build answer as paragraph
+            answer = "\n\n".join([doc.page_content for doc in docs])
+            
             st.markdown("### Answer (from your documents):")
-            st.markdown(answer) # Paragraph, not vertical list
-
+            st.markdown(answer)
+            
             st.markdown("---")
-            st.write(f"**Source 1:** {source_1}")
-            st.write(f"**Source 2:** {source_2}")
-else:
-    st.info("👆 Upload PDFs and ask a question above")
+            for i, doc in enumerate(docs):
+                st.write(f"**Source {i+1}:** {doc.page_content[:150]}...")
