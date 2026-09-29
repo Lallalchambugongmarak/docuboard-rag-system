@@ -34,6 +34,8 @@ if query and "db" in st.session_state:
     st.write("### Answer (from your documents):")
     for i, doc in enumerate(docs):
         st.write(f"**Source {i+1}:** {doc.page_content[:500]}...")
+        st.write(f"**Source 1:** {source_1}")
+        st.write(f"**Source 2:** {source_2}")
 else:
     if query:
         st.warning("Please upload PDFs first")
