@@ -5,8 +5,8 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
 st.set_page_config(page_title="DocuBot")
-st.title("DocuBot - Ask Your Company Documents")
-st.caption("Live RAG Demo | Streamlit, LangChain, FAISS, HuggingFace")
+st.title("Welcome To DocuBot - Ask Your Company Documents")
+st.caption("Please Upload your PDF Files")
 
 if 'vectorstore' not in st.session_state:
     st.session_state.vectorstore = None
@@ -43,4 +43,4 @@ if query:
         st.markdown("\n\n".join([d.page_content for d in docs]))
         st.markdown("---")
         for i, d in enumerate(docs):
-            st.caption(f"Source {i+1}: {d.page_content[:200]}...")
+            st.caption(f"Source {i+1}: {d.page_content[:1000]}...")
