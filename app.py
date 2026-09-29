@@ -27,15 +27,28 @@ if pdfs:
         st.session_state.db = db
         st.success(f"✅ Indexed {len(chunks)} chunks from {len(pdfs)} PDFs! Ask below.")
 
-query = st.text_input("Ask a question")
+# Ask a question
+query = st.text_input("Ask a question", placeholder="e.g., Any important words there in the PDF?")
 
-if query and "db" in st.session_state:
-    docs = st.session_state.db.similarity_search(query, k=3)
-    st.write("### Answer (from your documents):")
-    for i, doc in enumerate(docs):
-        st.write(f"**Source {i+1}:** {doc.page_content[:500]}...")
-        st.write(f"**Source 1:** {source_1}")
-        st.write(f"**Source 2:** {source_2}")
+if query:
+    if 'vectorstore' not in st.session_state:
+        st.warning("⚠️ Please upload PDFs first")
+    else:
+        with st.spinner("Searching..."):
+            # Your retrieval code here
+            docs = st.session_state.vectorstore.similarity_search(query, k=3)
+
+            # Build answer - as a SINGLE string, not loop
+            answer = "\n".join([doc.page_content for doc in docs[:2]])
+            source_1 = docs[0].metadata.get('source', 'Doc 1') if len(docs) > 0 else "No source"
+            source_2 = docs[1].metadata.get('source', 'Doc 2') if len(docs) > 1 else "No source"
+
+            # DISPLAY - FIXED
+            st.markdown("### Answer (from your documents):")
+            st.markdown(answer) # Paragraph, not vertical list
+
+            st.markdown("---")
+            st.write(f"**Source 1:** {source_1}")
+            st.write(f"**Source 2:** {source_2}")
 else:
-    if query:
-        st.warning("Please upload PDFs first")
+    st.info("👆 Upload PDFs and ask a question above")
