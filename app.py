@@ -5,7 +5,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
 st.set_page_config(page_title="DocuBot")
-st.title("📚Welcome To DocuBot😘   Know Your Paper and Document")
+st.title("📚🐰Welcome To DocuBot😘   Know Your Paper and Document")
 st.caption("Please Upload your PDF Files")
 
 if 'vectorstore' not in st.session_state:
