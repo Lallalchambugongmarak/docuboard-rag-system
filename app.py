@@ -84,17 +84,3 @@ if final_query:
                 st.caption("Playing Voice Answer")
         except Exception as e:
             st.error(f"TTS Error: {e}")
-
-
-query = st.text_input("Ask a question", placeholder="What is this document about?")
-
-if query:
-    if st.session_state.vectorstore is None:
-        st.warning("⚠️ Please upload PDFs first")
-    else:
-        docs = st.session_state.vectorstore.similarity_search(query, k=3)
-        st.markdown("### Answer (from your documents):")
-        st.markdown("\n\n".join([d.page_content for d in docs]))
-        st.markdown("---")
-        for i, d in enumerate(docs):
-            st.caption(f"Source {i+1}: {d.page_content[:1000]}...")
