@@ -73,7 +73,7 @@ if final_query:
         st.markdown(answer_text)
         st.markdown("---")
         for i, d in enumerate(docs):
-            st.caption(f"Source {i=1}: {d.page_content[:1000]}...")
+            st.caption(f"Source {i+1}: {d.page_content[:1000]}...")
 
         #--- VOICE ANSWER ---
         try:
