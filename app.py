@@ -53,16 +53,12 @@ if audio_query:
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
             tmp.write(audio_query.getvalue())
             tmp_path = tmp.name
-
-        with sr.AudioFile(temp_path) as source:
-            audio = r.listen(source)
-            text = r.recognize_google(audio)
-        r = sr.Recognizer()
         try:
-            with sr.AudioFile(temp_path) as source:
+            r = sr.Recognizer()
+            with sr.AudioFile(tmp_path) as source:
                 audio = r.record(source)
                 final_query = r.recognize_google(audio)
-                st.info(f"You said: {final_query}")
+            st.info(f"You said: {final_query}")
         except Exception as e:
             st.error(f"Voice not recognized: {e}")
             os.remove(tmp_path)
