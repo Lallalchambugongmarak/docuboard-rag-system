@@ -4,7 +4,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 import speech_recognition as sr
-from gtts import gTTs
+from gtts import gTTS
 import tempfile
 import os
 
