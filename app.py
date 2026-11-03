@@ -3,6 +3,10 @@ from pypdf import PdfReader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
+import speech_recognition as sr
+from gtts import gTTs
+import tempfile
+import os
 
 st.set_page_config(page_title="DocuBot")
 st.title("📚🐰Welcome To DocuBot! Know Your Paper and Documents😘")
@@ -31,6 +35,56 @@ if uploaded_files:
         st.success(f"✅ Indexed {len(texts)} chunks from {len(uploaded_files)} PDFs!")
     else:
         st.success(f"✅ Indexed {st.session_state.vectorstore.index.ntotal} chunks!")
+
+# --- VOICE + TEXT QUESTION SECTION ---
+st.divider()
+st.subheader("Ask with Voice or TEXT")
+
+col1, col2 = st.columns(2)
+with col1:
+    query_text = st.text_input("Ask a question", placeholder="What is document about?")
+    with col2:
+        audio_query = st.audio_input("Or Speak Your Question")
+        final_query = query_text
+
+# If Voice is given, convert voice to text
+if audio_query:
+    with st.spinner("Listening..."):
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
+            tmp.write(audio_query.getvalue())
+            tmp_path = tmp.name
+        r = sr.Recognizer()
+        try:
+            with sr.AudioFile(temp_path) as source:
+                audio = r.record(source)
+                final_query = r.recognize_google(audio)
+                st.info(f"You said: {final_query}")
+        except Exception as e:
+            st.error(f"Voice not recognized: {e}")
+            os.remove(tmp_path)
+if final_query:
+    if st.session_state.vectorstore is None:
+        st.warning("Please upload PDFs first")
+    else:
+        docs = st.session_state.vectorstore.similarity_search(final_query, k=3)
+        answer_text = "\n\n".join([d.page_content for d in docs])
+
+        st.markdown("### Answer (from your documents):")
+        st.markdown(answer_text)
+        st.markdown("---")
+        for i, d in enumerate(docs):
+            st.caption(f"Source {i=1}: {d.page_content[:1000]}...")
+
+        #--- VOICE ANSWER ---
+        try:
+            tts = gTTs(text=answer_text[:4000], lang='en') # first 4000 chars only
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
+                tts.save(fp.name)
+                st.audio(fp.name, format="audio/mp3", autoplay=True)
+                st.caption("Playing Voice Answer")
+        except Exception as e:
+            st.error(f"TTS Error: {e}")
+
 
 query = st.text_input("Ask a question", placeholder="What is this document about?")
 
