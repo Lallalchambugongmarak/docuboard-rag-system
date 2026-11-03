@@ -83,4 +83,4 @@ if final_query:
                 st.audio(fp.name, format="audio/mp3", autoplay=True)
                 st.caption("Playing Voice Answer")
         except Exception as e:
-            st.error(f"TTS Error: {e}")
+            st.error(f"gTTS Error: {e}")
