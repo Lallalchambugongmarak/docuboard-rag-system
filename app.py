@@ -53,6 +53,10 @@ if audio_query:
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
             f.write(audio_bytes)
             tmp_path = f.name
+
+        with sr.AudioFile(temp_path) as source:
+            audio = r.listen(source)
+            text = r.recognize_google(audio)
         r = sr.Recognizer()
         try:
             with sr.AudioFile(temp_path) as source:
