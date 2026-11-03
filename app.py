@@ -77,7 +77,7 @@ if final_query:
 
         #--- VOICE ANSWER ---
         try:
-            tts = gTTs(text=answer_text[:4000], lang='en') # first 4000 chars only
+            tts = gTTS(text=answer_text[:4000], lang='en') # first 4000 chars only
             with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
                 tts.save(fp.name)
                 st.audio(fp.name, format="audio/mp3", autoplay=True)
