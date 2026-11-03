@@ -50,9 +50,9 @@ with col1:
 # If Voice is given, convert voice to text
 if audio_query:
     with st.spinner("Listening..."):
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
-            f.write(audio_bytes)
-            tmp_path = f.name
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
+            tmp.write(audio_query.getvalue())
+            tmp_path = tmp.name
 
         with sr.AudioFile(temp_path) as source:
             audio = r.listen(source)
