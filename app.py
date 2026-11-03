@@ -5,8 +5,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
 st.set_page_config(page_title="DocuBot")
-st.title("Hi I'm Mina, 
-Welcome To DocuBot😘
+st.title("Hi I'm Mina, Welcome To DocuBot😘
 Know Your Document")
 st.caption("Please Upload your PDF Files")
 
