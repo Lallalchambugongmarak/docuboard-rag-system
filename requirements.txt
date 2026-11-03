@@ -1,5 +1,5 @@
 streamlit
-gTTs
+gTTS
 SpeechRecognition
 pypdf
 langchain
