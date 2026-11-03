@@ -1,4 +1,6 @@
 streamlit
+gTTs
+SpeechRecognition
 pypdf
 langchain
 langchain-community
@@ -6,4 +8,4 @@ langchain-huggingface
 langchain-text-splitters
 faiss-cpu
 sentence-transformers
-SpeechRecognition
+python-dotenv
