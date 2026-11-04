@@ -37,7 +37,7 @@ if uploaded_files:
         st.success(f"✅ Indexed {st.session_state.vectorstore.index.ntotal} chunks!")
 
 # --- VOICE + TEXT QUESTION SECTION ---
-st.container()
+st.divider()
 st.subheader("Ask with Voice or Text")
 
 col1, col2 = st.raws(2)
