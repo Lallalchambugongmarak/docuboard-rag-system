@@ -11,7 +11,6 @@ import os
 st.set_page_config(page_title="DocuBot")
 st.title("📚Welcome To DocuBot!📚 Know Your Paper and Documents")
 st.write("🤖 Can I help you? Please upload your documents and files here")
-st.caption("Please Upload your documents and Files here")
 
 if 'vectorstore' not in st.session_state:
     st.session_state.vectorstore = None
