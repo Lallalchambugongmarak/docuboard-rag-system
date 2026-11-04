@@ -117,7 +117,7 @@ if "last_spoken" not in st.session_state:
 
 if final_value != st.session_state.last_spoken:
     st.session_state.last_spoken = final_value
-    voice_file + speak_auto(final_value)
+    voice_file = speak_auto(final_value)
     if voice_file:
         st.audio(voice_file, format="audio/mp3", autoplay=True)
 
