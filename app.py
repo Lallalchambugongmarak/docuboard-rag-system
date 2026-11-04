@@ -99,7 +99,7 @@ def speak_in_python(text):
     if not text:
         return None
 
-    file_name = f"voice_{haslib.md5(text.encode()).hexdigest()[:8]}.mp3"
+    file_name = f"voice_{hashlib.md5(text.encode()).hexdigest()[:8]}.mp3"
 
     if os.path.exists(file_name):
         return file_name
