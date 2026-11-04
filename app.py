@@ -62,7 +62,7 @@ elif audio_value:
 if audio_value:
     with st.spinner("Listening..."):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
-            tmp.write(audio_query.getvalue())
+            tmp.write(audio_value.getvalue())
             tmp_path = tmp.name
         try:
             r = sr.Recognizer()
@@ -78,7 +78,7 @@ if final_value:
     if st.session_state.vectorstore is None:
         st.warning("Please upload PDFs first")
     else:
-        docs = st.session_state.vectorstore.similarity_search(final_query, k=3)
+        docs = st.session_state.vectorstore.similarity_search(final_value, k=3)
         answer_text = "\n\n".join([d.page_content for d in docs])
 
         st.markdown("### Answer (from your documents):")
