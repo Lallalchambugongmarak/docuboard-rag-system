@@ -9,14 +9,7 @@ import tempfile
 import os
 
 st.set_page_config(page_title="DocuBot")
-col1, col2 = st.columns([1, 2])
-with col1:
-    st.markdown("""<video autoplay loop muted playsinline width="100%">
-    <source src="robot.mp4" type="video/mp4">
-    </video>
-    """, unsafe_allow_htnl=True)
-with col2:
-    st.title("Welcome To DocuBot!📚 Know Your Paper and Documents")
+st.title("🤖 Welcome To DocuBot!📚 Know Your Paper and Documents")
     st.write("Can I help you? Please upload your documents or paper")
 st.caption("Please Upload your PDF Files")
 
