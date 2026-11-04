@@ -40,10 +40,10 @@ if uploaded_files:
 st.divider()
 st.subheader("Ask with Voice or Text")
 
-raw1, raw2 = st.raws(2)
-with raw1:
+col1, col2 = st.columns(2)
+with col1:
     query_text = st.text_input("Ask a question", placeholder="What is document about?")
-    with raw2:
+    with col2:
         audio_query = st.audio_input("Or Speak Your Question")
         final_query = query_text
 
