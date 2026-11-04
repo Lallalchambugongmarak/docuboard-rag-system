@@ -73,6 +73,7 @@ if audio_value:
         except Exception as e:
             st.error(f"Voice not recognized: {e}")
             os.remove(tmp_path)
+        final_value = question_text
 if final_value:
     if st.session_state.vectorstore is None:
         st.warning("Please upload PDFs first")
