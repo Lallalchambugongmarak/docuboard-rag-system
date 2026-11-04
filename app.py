@@ -112,6 +112,15 @@ def speak_auto(text):
             continue
     return None
 
+if "last_spoken" not in st.session_state:
+    st.session_state.last_spoken = ""
+
+if final_value != st.session_state.last_spoken:
+    st.seesion_state.last_spoken = final_value
+    voice_file + speak_auto(final_value)
+    if voice_file:
+        st.audio(voice_file, format="audio/mp3", autoplay=True)
+
 if st.button("Speak Answer"):
     voice_file = speak_in_python(final_value)
     if voice_file:
