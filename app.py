@@ -37,13 +37,13 @@ if uploaded_files:
         st.success(f"✅ Indexed {st.session_state.vectorstore.index.ntotal} chunks!")
 
 # --- VOICE + TEXT QUESTION SECTION ---
-st.divider()
+st.container():
 st.subheader("Ask with Voice or Text")
 
-rw1, rw2 = st.raws(2)
-with rw1:
+col1, col2 = st.raws(2)
+with col1:
     query_text = st.text_input("Ask a question", placeholder="What is document about?")
-    with rw2:
+    with col2:
         audio_query = st.audio_input("Or Speak Your Question")
         final_query = query_text
 
