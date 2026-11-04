@@ -11,7 +11,7 @@ import os
 st.set_page_config(page_title="DocuBot")
 col1, col2 = st.columns([1, 2])
 with col1:
-    st.video("robot.mp4", autoplay=True, loop=True, muted=True)
+    st.image("https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif", width=120)
 with col2:
     st.title("Welcome To DocuBot!📚 Know Your Paper and Documents")
     st.write("Can I help you? Please upload your documents or paper")
