@@ -107,7 +107,7 @@ def speak_in_python(text):
     time.sleep(1)
 
     async def make_voice():
-        communicaate = edge_tts.Communicate(text, "en-US-AriaNeural = American Female")
+        communicaate = edge_tts.Communicate(text, "en-IN-NeerjaNeural = Indian Female")
         await communicate.save(file_name)
 
     for try_no in range(3):
