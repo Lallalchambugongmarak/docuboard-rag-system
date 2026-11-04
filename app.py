@@ -121,4 +121,4 @@ if final_value != st.session_state.last_spoken:
     if voice_file:
         st.audio(voice_file, format="audio/mp3", autoplay=True)
     else:
-        st.warning("Voice is busy. Please wait 10 seconds and try again.")
+        st.warning("Voice is busy. Please wait 10 seconds")
