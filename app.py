@@ -94,22 +94,15 @@ import edge_tts
 import os
 import time
 
-def speak_in_python(text):
+def speak_auto(text):
     text = text[:500].strip()
     if not text:
         return None
-
     file_name = "voice.mp3"
-
-    if os.path.exists(file_name):
-        return file_name
-
     time.sleep(1)
-
     async def make_voice():
-        communicaate = edge_tts.Communicate(text, "en-IN-NeerjaNeural = Indian Female")
+        communicaate = edge_tts.Communicate(text, "en-US-AriaNeural = Indian Female")
         await communicate.save(file_name)
-
     for try_no in range(3):
         try:
             asyncio.run(make_voice())
