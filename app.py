@@ -37,6 +37,8 @@ if uploaded_files:
         st.success(f"✅ Indexed {st.session_state.vectorstore.index.ntotal} chunks!")
 
 # --- VOICE + TEXT QUESTION SECTION ---
+st.subheader("Ask Your Question with Voice or Text")
+
 #----- ROW 1 - Type -----
 st.write("Type a Question")
 question_text = st.text_input("Type a Question", placeholder="What is document about?", label_visibility="collapsed")
