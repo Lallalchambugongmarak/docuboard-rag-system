@@ -1,6 +1,7 @@
 streamlit
 gTTS
 SpeechRecognition
+edge-tts
 pypdf
 langchain
 langchain-community
