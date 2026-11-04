@@ -55,7 +55,7 @@ if st.button("Ask", use_container_width=True):
         st.write(f"You Asked: {question_text}")
         # put your answer code here
 elif audio_value:
-    st.write("You spoke a qestion - proccessing...")
+    st.write("Your is voice proccessing...")
     # put your voice to text code here
 
 st.divider()
