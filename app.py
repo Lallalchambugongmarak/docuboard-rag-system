@@ -9,7 +9,7 @@ import tempfile
 import os
 
 st.set_page_config(page_title="DocuBot")
-st.title("📚🤖Welcome To DocuBot! Know Your Paper and Documents")
+st.title("🤖Welcome To DocuBot!📚 Know Your Paper and Documents")
 st.caption("Please Upload your PDF Files")
 
 if 'vectorstore' not in st.session_state:
@@ -59,7 +59,7 @@ elif audio_value:
     # put your voice to text code here
 
 # If Voice is given, convert voice to text
-if audio_query:
+if audio_value:
     with st.spinner("Listening..."):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
             tmp.write(audio_query.getvalue())
