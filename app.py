@@ -108,7 +108,6 @@ def speak_auto(text):
         except Exception as e:
             st.error(f"VOICE ERROR: {e}")
             return None
-    return None
 
 if "last_spoken" not in st.session_state:
     st.session_state.last_spoken = ""
