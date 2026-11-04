@@ -89,6 +89,17 @@ if final_value:
             st.caption(f"Source {i+1}: {d.page_content[:1000]}...")
 
         #--- VOICE ANSWER ---
+        
+        try:
+            tts = gTTS(text=answer_text[:4000], lang='en') # first 4000 chars only
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
+                tts.save(fp.name)
+                st.audio(fp.name, format="audio/mp3", autoplay=True)
+                st.caption("Playing Voice Answer")
+        except Exception as e:
+            st.error(f"gTTS Error: {e}")
+
+
 import asyncio
 import edge_tts
 import os
