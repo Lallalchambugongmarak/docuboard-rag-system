@@ -101,7 +101,7 @@ def speak_auto(text):
     file_name = "voice.mp3"
     time.sleep(1)
     async def make_voice():
-        communicaate = edge_tts.Communicate(text, "en-US-AriaNeural = American Female")
+        communicaate = edge_tts.Communicate(text, "en-IN-NeerjaNeural = Indian Female")
         await communicate.save(file_name)
     for try_no in range(3):
         try:
