@@ -37,6 +37,25 @@ if uploaded_files:
         st.success(f"✅ Indexed {st.session_state.vectorstore.index.ntotal} chunks!")
 
 # --- VOICE + TEXT QUESTION SECTION ---
+#----- ROW 1 - Type -----
+st.write("Type a Question")
+question_text = st.text_input("Type a Question", placeholder="What is document about?", label_visibility="collapsed")
+
+st.write("") #empty space
+
+#----- ROW 2 - Voice -----
+st.write("Speak Your Question")
+audio_value = st.audio_input("Speak Your Question", label_visibility="collapsed")
+
+#----- ROW 3 - Button -----
+if st.button("Ask", use_container_width=True):
+    if question_text:
+        st.write(f"You Asked: {question_text}")
+        # put your answer code here
+elif audio_value:
+    st.write("You spoke a qestion - proccessing...")
+    # put your voice to text code here
+
 st.divider()
 st.subheader("Ask Your Question with Voice or Text")
 
