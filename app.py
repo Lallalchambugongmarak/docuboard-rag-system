@@ -101,10 +101,8 @@ def speak_auto(text):
     file_name = "voice.mp3"
     time.sleep(1)
     async def make_voice():
-        communicaate = edge_tts.Communicate(text, "en-IN-NeerjaNeural")
-        await communicate.save(file_name)
-    for try_no in range(3):
-        try:
+        await edge_tts.Communicate(text, "en-IN-NeerjaNeural").save(file_name)
+    try:
             asyncio.run(make_voice())
             return file_name
         except Exception as e:
