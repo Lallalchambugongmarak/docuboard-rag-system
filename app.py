@@ -9,7 +9,7 @@ import tempfile
 import os
 
 st.set_page_config(page_title="DocuBot")
-st.title("🤖Welcome To DocuBot!📚 Know Your Paper and Documents")
+st.title("🤖 Welcome To DocuBot!📚 Know Your Paper and Documents")
 st.caption("Please Upload your PDF Files")
 
 if 'vectorstore' not in st.session_state:
@@ -73,7 +73,7 @@ if audio_value:
         except Exception as e:
             st.error(f"Voice not recognized: {e}")
             os.remove(tmp_path)
-if final_query:
+if final_value:
     if st.session_state.vectorstore is None:
         st.warning("Please upload PDFs first")
     else:
