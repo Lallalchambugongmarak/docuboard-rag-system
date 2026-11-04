@@ -101,15 +101,15 @@ def speak_auto(text):
     file_name = "voice.mp3"
     time.sleep(1)
     async def make_voice():
-        communicaate = edge_tts.Communicate(text, "en-IN-NeerjaNeural = Indian Female")
+        communicaate = edge_tts.Communicate(text, "en-US-AriaNeural")
         await communicate.save(file_name)
     for try_no in range(3):
         try:
             asyncio.run(make_voice())
             return file_name
         except Exception as e:
-            time.sleep(3)
-            continue
+            st.error(f"VOICE ERROR: {e}")
+            return None
     return None
 
 if "last_spoken" not in st.session_state:
