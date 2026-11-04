@@ -103,11 +103,11 @@ def speak_auto(text):
     async def make_voice():
         await edge_tts.Communicate(text, "en-IN-NeerjaNeural").save(file_name)
     try:
-            asyncio.run(make_voice())
-            return file_name
-        except Exception as e:
-            st.error(f"VOICE ERROR: {e}")
-            return None
+        asyncio.run(make_voice())
+        return file_name
+    except Exception as e:
+        st.error(f"VOICE ERROR: {e}")
+        return None
 
 if "last_spoken" not in st.session_state:
     st.session_state.last_spoken = ""
