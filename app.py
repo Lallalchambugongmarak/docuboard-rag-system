@@ -9,8 +9,12 @@ import tempfile
 import os
 
 st.set_page_config(page_title="DocuBot")
-st.title("st.image("https//raw.githubusercontent.com/Lallalchambungmarak/docuboard-rag-system/main/robot.png", width=80)Welcome To DocuBot!📚 Know Your Paper and Documents")
-st.caption("Please Upload your PDF Files")
+col1, col2 = st.columns([1, 6])
+with col1:
+    st.image("https://img.icons8.com/color/96/robot.png", width=80)
+with col2:
+    st.title("st.image("Welcome To DocuBot!📚 Know Your Paper and Documents")
+    st.caption("Please Upload your PDF Files")
 
 if 'vectorstore' not in st.session_state:
     st.session_state.vectorstore = None
