@@ -69,11 +69,11 @@ if audio_value:
             with sr.AudioFile(tmp_path) as source:
                 audio = r.record(source)
                 final_query = r.recognize_google(audio)
-            st.info(f"You said: {final_value}")
+            st.info(f"You said: {final_query}")
         except Exception as e:
             st.error(f"Voice not recognized: {e}")
             os.remove(tmp_path)
-final_value = final_query if audio_value else question_text
+final_query = final_query if audio_value else question_text
 if final_value:
     if st.session_state.vectorstore is None:
         st.warning("Please upload PDFs first")
