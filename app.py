@@ -9,7 +9,7 @@ import tempfile
 import os
 
 st.set_page_config(page_title="DocuBot")
-st.title("📚🐰Welcome To DocuBot! Know Your Paper and Documents😘")
+st.title("📚🤖Welcome To DocuBot! Know Your Paper and Documents")
 st.caption("Please Upload your PDF Files")
 
 if 'vectorstore' not in st.session_state:
@@ -38,7 +38,7 @@ if uploaded_files:
 
 # --- VOICE + TEXT QUESTION SECTION ---
 st.divider()
-st.subheader("Ask with Voice or TEXT")
+st.subheader("Ask with Voice or Text")
 
 col1, col2 = st.columns(2)
 with col1:
