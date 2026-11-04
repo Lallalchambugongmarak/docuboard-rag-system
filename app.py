@@ -9,11 +9,12 @@ import tempfile
 import os
 
 st.set_page_config(page_title="DocuBot")
-col1, col2 = st.columns([1, 6])
+col1, col2 = st.columns([1, 2])
 with col1:
-    st.image("https://img.icons8.com/color/96/robot.png", width=80)
+    st.video("robot.mp4", autoplay=True, loop=True, muted=True)
 with col2:
     st.title("Welcome To DocuBot!📚 Know Your Paper and Documents")
+    st.write("Can I help you? Please upload your documents or paper")
 st.caption("Please Upload your PDF Files")
 
 if 'vectorstore' not in st.session_state:
