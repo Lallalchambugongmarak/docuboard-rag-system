@@ -125,12 +125,3 @@ if st.button("Speak Answer"):
         st.audio(voice_file, format="audio/mp3")
     else:
         st.warning("Voice is busy. Please wait 10 seconds and try again.")
-        
-        try:
-            tts = gTTS(text=answer_text[:4000], lang='en') # first 4000 chars only
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
-                tts.save(fp.name)
-                st.audio(fp.name, format="audio/mp3", autoplay=True)
-                st.caption("Playing Voice Answer")
-        except Exception as e:
-            st.error(f"gTTS Error: {e}")
