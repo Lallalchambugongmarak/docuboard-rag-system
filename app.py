@@ -59,6 +59,7 @@ elif audio_value:
     # put your voice to text code here
 
 # If Voice is given, convert voice to text
+final_query = ""
 if audio_value:
     with st.spinner("Listening..."):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
@@ -68,7 +69,7 @@ if audio_value:
             r = sr.Recognizer()
             with sr.AudioFile(tmp_path) as source:
                 audio = r.record(source)
-                final_value = r.recognize_google(audio)
+                final_query = r.recognize_google(audio)
             st.info(f"You said: {final_query}")
         except Exception as e:
             st.error(f"Voice not recognized: {e}")
