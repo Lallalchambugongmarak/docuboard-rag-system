@@ -9,7 +9,8 @@ import tempfile
 import os
 
 st.set_page_config(page_title="DocuBot")
-st.title("🤖 Welcome To DocuBot!📚 Know Your Paper and Documents")
+st.image("https://cdn-icons-png.flaticon.com/512/4712/4712109png", width=100)
+st.title("Welcome To DocuBot!📚 Know Your Paper and Documents")
 st.caption("Please Upload your PDF Files")
 
 if 'vectorstore' not in st.session_state:
