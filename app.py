@@ -32,9 +32,9 @@ if uploaded_files:
             emb = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
             st.session_state.vectorstore = FAISS.from_texts(texts, emb)
             st.session_state.last_files = file_names
-        st.success(f"✅ Indexed {len(texts)} chunks from {len(uploaded_files)} PDFs!")
+        st.success(f"Indexed {len(texts)} chunks from {len(uploaded_files)} PDFs!")
     else:
-        st.success(f"✅ Indexed {st.session_state.vectorstore.index.ntotal} chunks!")
+        st.success(f"Indexed {st.session_state.vectorstore.index.ntotal} chunks!")
 
 # --- VOICE + TEXT QUESTION SECTION ---
 st.subheader("Ask Your Question with Voice or Text")
@@ -89,6 +89,43 @@ if final_value:
             st.caption(f"Source {i+1}: {d.page_content[:1000]}...")
 
         #--- VOICE ANSWER ---
+import asyncio
+import edge_tts
+import os
+import time
+
+def speak_in_python(text):
+    text = text[:500].strip()
+    if not text:
+        return None
+
+    file_name = f"voice_{haslib.md5(text.encode()).hexdigest()[:8]}.mp3"
+
+    if os.path.exists(file_name):
+        return file_name
+
+    time.sleep(1)
+
+    async def make_voice():
+        communicaate = edge_tts.Communicate(text, "en-US-AriaNeural = American Female")
+        await communicate.save(file_name)
+
+    for try_no in range(3):
+        try:
+            asyncio.run(make_voice())
+            return file_name
+        except Exception as e:
+            time.sleep(3)
+            continue
+    return None
+
+if st.button("Speak Answer"):
+    voice_file = speak_in_python(final_value)
+    if voice_file:
+        st.audio(voice_file, format="audio/mp3")
+    else:
+        st.warning("Voice is busy. Please wait 10 seconds and try again.")
+        
         try:
             tts = gTTS(text=answer_text[:4000], lang='en') # first 4000 chars only
             with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
