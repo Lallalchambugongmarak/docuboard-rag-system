@@ -42,7 +42,7 @@ st.subheader("Ask Your Question with Voice or Text")
 
 col1, col2 = st.columns(2)
 with col1:
-    query_text = st.text_input("Type a Question", placeholder="What is document about?")= st.audio_input("Speak Your Question")
+    query_text = st.text_input("Type a Question", placeholder="What is document about?")
     with col2:
         audio_query = st.audio_input("Speak Your Question")
         final_query = query_text
