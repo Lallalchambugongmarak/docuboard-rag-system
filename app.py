@@ -49,6 +49,19 @@ st.write("") #empty space
 st.write("Speak Your Question")
 audio_value = st.audio_input("Speak Your Question", label_visibility="collapsed", key="voice_q")
 
+#-------- Audio Text -----------
+def transcribe_audio(audio):
+    try:
+        import speech_recognition as sr
+        import io
+        r = sr.Recognizer()
+        wav_bytes = audio.getvalue()
+        with sr.AudioFile(io.BytesIO(wav_bytes)) as source:
+            data = r.record(source)
+            return r.recognize_google(data)
+    except Exception:
+        return ""
+
 #----- ROW 3 - Button -----
 if st.button("Ask", use_container_width=True):
     if question_text:
