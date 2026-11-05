@@ -53,20 +53,19 @@ audio_value = st.audio_input("Speak Your Question", label_visibility="collapsed"
 if st.button("Ask", use_container_width=True):
     if question_text:
         st.write(f"You Asked: {question_text}")
-if "vectorstore" not in st.session_state or st.session_state.vectorstore is None:
-    st.error("Please upload a PDF first")
-    final_value = "Please upload a PDF first."
-else:
-    docs = st.session_state.vectorstore.similarity_search(question_text, k=3)
-    context = "\n\n".join([d.page_content for d in docs])
-    final_value = f"From your document:\n\n{context}"
-    st.write(final_value)
+        if "vectorstore" not in st.session_state or st.session_state.vectorstore is None:
+            st.error("Please upload a PDF first")
+            final_value = "Please upload a PDF first."
+        else:
+            docs = st.session_state.vectorstore.similarity_search(question_text, k=3)
+            context = "\n\n".join([d.page_content for d in docs])
+            final_value = f"From your document:\n\n{context}"
+            st.write(final_value)
     
-        # put your answer code here
-audio_value:
-    st.write("Your is voice proccessing...")
-    # put your voice to text code here
-
+# put your answer code here
+    elif audio_value:
+        st.write("Your is voice proccessing...")
+        
 # If Voice is given, convert voice to text
 final_query = ""
 if audio_value:
