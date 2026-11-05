@@ -150,3 +150,12 @@ def speak_auto(text):
 voice_file = speak_auto(voice_text)
 if voice_file:
     st.audio(voice_file, format="audio/mp3", autoplay=True)
+
+#------- Thankyou You Bottom - After Answer is complete -------
+St.write("---")
+st.write("Did she answer your question?")
+
+if st.button("Say Thank You To Her", use_container_width=True):
+    thank_you_reply = "You are most welcome! Thank you for asking me. I am always happy to help you from your PDF."
+    voice_text = clean_for_voice(thank_you_reply)
+    speak_auto(voice_text)
