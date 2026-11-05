@@ -90,11 +90,19 @@ if final_value:
 
         #--- Voice Answer ---
 import re
+
 def clean_for_voice(text):
     text = str(text)
     if "Source" in text:
         text = text.split("Source")[0]
-    if "Source" in text:
+    text = re.sub(r"http\S+", " ", text)
+    text = re.sub(r"[*#_{}\[\]()@\"']", " ", text)
+    text =re.sub(r"\s+", " ", text).strip()
+    if len(text) < 10:
+        text = "I found your file. Please ask mea question about your study topic, and I will explain it step by step."
+    return text[:500]
+
+    
         text = text.split("Source")[0]
     lines = []
     for line in text.split("\n"):
@@ -106,7 +114,7 @@ def clean_for_voice(text):
     clean = " ".join(lines)
     clean = re.sub(r"[*#_{}\[\]()@\"']", " ", clean)
     clean =re.sub(r"\s+", " ", clean).strip()
-    return clean[:500]
+    return text[:500]
 
     #-------Auto Play With Clean Text-------
     if "last_spoken" not in st.session_state:
