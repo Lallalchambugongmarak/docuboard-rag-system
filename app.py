@@ -89,6 +89,9 @@ if final_value:
             st.caption(f"Source {i+1}: {d.page_content[:1000]}...")
 
         #--- Voice Answer ---
+import asyncio
+import edge_tts
+import time
 import re
 
 def clean_for_voice(text):
@@ -102,25 +105,12 @@ def clean_for_voice(text):
         text = "I found your file. Please ask mea question about your study topic, and I will explain it step by step."
     return text[:500]
 
-    
-    lines = []
-    for line in text.split("\n"):
-        if line.strip().startswitch(("def", "@app", "return", "http", "import", "from", "elif", "else", "if msg")):
-            continue
-        if "colab.research" in line or "def " in line or "@app.post" in line:
-            continue
-        lines.append(line)
-    clean = " ".join(lines)
-    clean = re.sub(r"[*#_{}\[\]()@\"']", " ", clean)
-    clean =re.sub(r"\s+", " ", clean).strip()
-    return text[:500]
-
     #-------Auto Play With Clean Text-------
 if "last_spoken" not in st.session_state:
     st.session_state.last_spoken = ""
 if final_value != st.session_state.last_spoken:
     st.session_state.last_spoken = final_value
-    voice_text = clean_for_voice(final_value)
+voice_text = clean_for_voice(final_value)
 def speak_auto(text):
     text = str(text)[:500].strip()
     if not text:
@@ -135,7 +125,7 @@ def speak_auto(text):
     except Exception as e:
         st.error(f"VOICE ERROR: {e}")
         return None
-    voice_file = speak_auto(voice_text)
     
-    if voice_file:
-            st.audio(voice_file, format="audio/mp3", autoplay=True)
+voice_file = speak_auto(voice_text)
+if voice_file:
+    st.audio(voice_file, format="audio/mp3", autoplay=True)
