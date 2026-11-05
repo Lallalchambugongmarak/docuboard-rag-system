@@ -88,34 +88,34 @@ if final_value:
         for i, d in enumerate(docs):
             st.caption(f"Source {i+1}: {d.page_content[:1000]}...")
 
-        #--- VOICE ANSWER ---
-import asyncio
-import edge_tts
-import os
-import time
+        #--- Voice Answer ---
+import re
+def clean_for_voice(text):
+    text = str(text)
+    if "Source" in text:
+        text = text.split("Source")[0]
+    if "Source" in text:
+        text = text.split("Source")[0]
+    lines = []
+    for line in text.split("\n"):
+        if line.strip().startswitch(("def", "@app", "return", "http", "import", "from", "elif", "else", "if msg")):
+            continue
+        if "colab.research" in line or "def " in line or "@app.post" in line:
+            continue
+        lines.append(line)
+    clean = " ".join(lines)
+    clean = re.sub(r"[*#_{}\[\]()@\"']", " ", clean)
+    clean =re.sub(r"\s+", " ", clean).strip()
+    return clean[:500]
 
-def speak_auto(text):
-    text = text[:500].strip()
-    if not text:
-        return None
-    file_name = "voice.mp3"
-    time.sleep(1)
-    async def make_voice():
-        await edge_tts.Communicate(text, "en-US-AriaNeural").save(file_name)
-    try:
-        asyncio.run(make_voice())
-        return file_name
-    except Exception as e:
-        st.error(f"VOICE ERROR: {e}")
-        return None
-
-if "last_spoken" not in st.session_state:
-    st.session_state.last_spoken = ""
-
-if final_value != st.session_state.last_spoken:
-    st.session_state.last_spoken = final_value
-    voice_file = speak_auto(final_value)
-    if voice_file:
-        st.audio(voice_file, format="audio/mp3", autoplay=True)
+    #-------Auto Play With Clean Text-------
+    if "last_spoken" not in st.session_state:
+        st.session_state.last_spoken = ""
+    if final_value != st.session_state.last_spoken:
+        st.session_state.last_spoken = final_value
+        voice_text = clean_for_voice(final_value)
+        voice_file = speak_auto(voice_text)
+        if voice_file:
+            st.audio(voice_file, format="audio/mp3", autoplay=True)
     else:
         st.warning("Voice is busy. Please wait 10 seconds")
