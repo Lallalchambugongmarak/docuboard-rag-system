@@ -103,7 +103,6 @@ def clean_for_voice(text):
     return text[:500]
 
     
-        text = text.split("Source")[0]
     lines = []
     for line in text.split("\n"):
         if line.strip().startswitch(("def", "@app", "return", "http", "import", "from", "elif", "else", "if msg")):
