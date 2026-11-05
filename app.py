@@ -47,7 +47,7 @@ st.write("") #empty space
 
 #----- ROW 2 - Voice -----
 st.write("Speak Your Question")
-audio_value = st.audio_input("Speak Your Question", label_visibility="collapsed")
+audio_value = st.audio_input("Speak Your Question", label_visibility="collapsed", key="voice_q")
 
 #----- ROW 3 - Button -----
 if st.button("Ask", use_container_width=True):
