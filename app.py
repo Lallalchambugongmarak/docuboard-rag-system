@@ -152,7 +152,7 @@ if voice_file:
     st.audio(voice_file, format="audio/mp3", autoplay=True)
 
 #------- Thankyou You Bottom - After Answer is complete -------
-St.write("---")
+st.write("---")
 st.write("Did she answer your question?")
 
 if st.button("Say Thank You To Her", use_container_width=True):
