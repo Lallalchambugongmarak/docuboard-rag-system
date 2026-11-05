@@ -121,6 +121,20 @@ if "last_spoken" not in st.session_state:
 if final_value != st.session_state.last_spoken:
     st.session_state.last_spoken = final_value
     voice_text = clean_for_voice(final_value)
+def speak_auto(text):
+    text = str(text)[:500].strip()
+    if not text:
+        return None
+    file_name = "voice.mp3"
+    time.sleep(1)
+    async def make_voice():
+        await edge_tts.Communicate(text, "en-US-AriaNeural").save(file_name)
+    try:
+        asyncio.run(make_voice())
+        return file_name
+    except Exception as e:
+        st.error(f"VOICE ERROR: {e}")
+        return None
     voice_file = speak_auto(voice_text)
     
     if voice_file:
