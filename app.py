@@ -96,13 +96,13 @@ if audio_value:
             st.error(f"Voice not recognized: {e}")
             os.remove(tmp_path)
 final_value = final_query if audio_value else question_text
-if final_value:
+if final_query:
     if st.session_state.vectorstore is None:
         st.warning("Please upload PDFs first")
     else:
         docs = st.session_state.vectorstore.similarity_search(final_value, k=3)
         answer_text = "\n\n".join([d.page_content for d in docs])
-
+        final_value = answer_text
         st.markdown("### Answer (from your documents):")
         st.markdown(answer_text)
         st.markdown("---")
