@@ -161,4 +161,4 @@ if st.button("Thank You", use_container_width=True):
     voice_text = clean_for_voice(thank_you_reply)
     voice_file = speak_auto(voice_text)
     if voice_file:
-        st.audio(voice_file, formate="audio/mp3", autoplay=True)
+        st.audio(voice_file)
