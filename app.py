@@ -63,7 +63,7 @@ else:
     st.write(final_value)
     
         # put your answer code here
-elif audio_value:
+audio_value:
     st.write("Your is voice proccessing...")
     # put your voice to text code here
 
