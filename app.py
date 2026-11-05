@@ -110,7 +110,7 @@ if "last_spoken" not in st.session_state:
     st.session_state.last_spoken = ""
 if final_value != st.session_state.last_spoken:
     st.session_state.last_spoken = final_value
-voice_text = read_from_file(final_value, user_question)
+voice_text = clean_for_voice(final_value, user_question)
 def speak_auto(text):
     text = str(text)[:500].strip()
     if not text:
