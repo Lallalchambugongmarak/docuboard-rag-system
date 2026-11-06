@@ -73,7 +73,6 @@ def transcribe_audio(audio):
         return ""
 
 #----- ROW 3 - Button -----
-st.session_state.voice_file = None
 if st.button("Ask", use_container_width=True):
     st.session_state.thank_you_clicked = False
     
@@ -144,8 +143,10 @@ def clean_for_voice(text):
     text = re.sub(r"[*#_{}\[\]()@\"']", " ", text)
     text =re.sub(r"\s+", " ", text).strip()
     if len(text) < 10:
-        text = "Hi, I found your file. Please ask me a question about your study topic, and I will explain it step by step."
-    return text[:500]
+        if "vectorstore" not in st.session_state or st.session_state.vectorestore is None:
+            text = "Please upload your file first!"
+        else:
+            text = "Hi, Please ask me a question about your study and topic."
 
     #-------Auto Play With Clean Text-------
 if "last_spoken" not in st.session_state:
