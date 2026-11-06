@@ -156,7 +156,7 @@ def speak_auto(text):
 voice_file = speak_auto(voice_text)
 if voice_file:
     st.audio(voice_file, format="audio/mp3", autoplay=True)
-if not st.session_state.thank_you_clicked:
+if not st.session_state.get("thank_you_clicked", False):
     st.audio(voice_file, format="audio/mp3", autoplay=False)
 
 #------- Thankyou You Bottom - After Answer is complete -------
