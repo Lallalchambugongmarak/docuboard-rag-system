@@ -136,7 +136,7 @@ def speak_auto(text):
     text = str(text)[:500].strip()
     if not text:
         return None
-    file_name = "voice.mp3"
+    file_name = f"voice_{int(time.time())}.mp3"
     time.sleep(1)
     async def make_voice():
         await edge_tts.Communicate(text, "en-US-AriaNeural").save(file_name)
