@@ -73,7 +73,7 @@ def transcribe_audio(audio):
         return ""
 
 #----- ROW 3 - Button -----
-if st.button("Ask", use_container_width=True):
+if st.button("Ask", use_container_width=True, on_click=do_ask):
     st.sessio_state.thank_you_click = False
     if question_text:
         st.write(f"You Asked: {question_text}")
@@ -166,13 +166,13 @@ voice_file = speak_auto(voice_text)
 if voice_file:
     st.audio(voice_file, format="audio/mp3", autoplay=True)
 if not st.session_state.get("thank_you_clicked", False):
-    st.audio(voice_file, format="audio/mp3", autoplay=False)
+    st.audio(answer_audio, format="audio/mp3", autoplay=True)
 
 #------- Thankyou You Bottom - After Answer is complete -------
 st.write("---")
 st.write("Did she answer your question?")
 
-if st.button("Yes! Thank You", use_container_width=True, key="thank_you_btn"):
+if st.button("Yes! Thank You", use_container_width=True, on_click=do_thank_you):
     st.session_state.thank_you_clicked = True
     thank_you_reply = "You are most welcome! Thank you for asking me. I am always happy to help you from your PDF."
     st.write(thank_you_reply)
