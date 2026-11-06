@@ -74,7 +74,7 @@ def transcribe_audio(audio):
 
 #----- ROW 3 - Button -----
 if st.button("Ask", use_container_width=True, on_click=do_ask):
-    st.sessio_state.thank_you_click = False
+    st.session_state.thank_you_click = False
     if question_text:
         st.write(f"You Asked: {question_text}")
         if "vectorstore" not in st.session_state or st.session_state.vectorstore is None:
