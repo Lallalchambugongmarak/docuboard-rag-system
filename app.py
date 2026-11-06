@@ -21,7 +21,7 @@ uploaded_files = st.file_uploader("Upload PDFs", type="pdf", accept_multiple_fil
 
 if uploaded_files:
     file_names = [f.name for f in uploaded_files] if uploaded_files else []
-    selected_file = st.selectbox("Which file do you want ask about?", [All Files"] + file_names)
+    selected_file = st.selectbox("Which file do you want ask about?", ["All Files"] + file_names)
     if file_names != st.session_state.last_files:
         with st.spinner("Indexing..."):
             texts = []
