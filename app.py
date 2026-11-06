@@ -143,10 +143,11 @@ def clean_for_voice(text):
     text = re.sub(r"[*#_{}\[\]()@\"']", " ", text)
     text =re.sub(r"\s+", " ", text).strip()
     if len(text) < 10:
-        if "vectorstore" not in st.session_state or st.session_state.vectorestore is None:
+        if "vectorstore" not in st.session_state or st.session_state.get("vectorestore") is None:
             text = "Please upload your file first!"
         else:
             text = "Hi, Please ask me a question about your study and topic."
+    return text[:500]
 
     #-------Auto Play With Clean Text-------
 if "last_spoken" not in st.session_state:
