@@ -74,7 +74,7 @@ def transcribe_audio(audio):
 
 #----- ROW 3 - Button -----
 if st.button("Ask", use_container_width=True, on_click=do_ask):
-    if uploaded_file is None:
+    if YOUR_REAL_NAME is None:
         st.warning("Please upload your file first!")
         st.stop()
     st.session_state.thank_you_click = False
