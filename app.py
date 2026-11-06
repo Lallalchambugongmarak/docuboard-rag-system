@@ -144,9 +144,9 @@ def clean_for_voice(text):
     text =re.sub(r"\s+", " ", text).strip()
     if len(text) < 10:
         if "vectorstore" not in st.session_state or st.session_state.get("vectorestore") is None:
-            text = "Please upload your file first! and ask me a question about your study topics"
+            text = "Please upload your file first! and ask me a question about your study and topics"
         else:
-            text = "Hi, Please ask me a question about your study and topic."
+            text = "Hi, Please ask me a question about your study and topics."
     return text[:500]
 
     #-------Auto Play With Clean Text-------
