@@ -155,7 +155,8 @@ if voice_file:
 st.write("---")
 st.write("Did she answer your question?")
 
-if st.button("Yes! Thank You", use_container_width=True):
+if st.button("Yes! Thank You", use_container_width=True, key="thank_you_btn"):
+    st.session_state.thank_you_clicked = True
     thank_you_reply = "You are most welcome! Thank you for asking me. I am always happy to help you from your PDF."
     st.write(thank_you_reply)
     voice_text = clean_for_voice(thank_you_reply)
