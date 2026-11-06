@@ -73,7 +73,7 @@ def transcribe_audio(audio):
         return ""
 
 #----- ROW 3 - Button -----
-if st.button("Ask", use_container_width=True, on_click=do_ask):
+if st.button("Ask", use_container_width=True):
     st.session_state.thank_you_clicked = False
     
     if question_text:
@@ -85,7 +85,6 @@ if st.button("Ask", use_container_width=True, on_click=do_ask):
             if voice_file:
                 st.audio(voice_file, format="audio/mp3", autoplay=True)
             st.stop()
-            final_value = "Please upload PDF file first!"
         else:
             docs = st.session_state.vectorstore.similarity_search(question_text, k=3)
             context = "\n\n".join([d.page_content for d in docs])
