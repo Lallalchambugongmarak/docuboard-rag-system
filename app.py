@@ -149,7 +149,7 @@ def speak_auto(text):
     
 voice_file = speak_auto(voice_text)
 if voice_file:
-    st.audio(voice_file)
+    st.audio(voice_file, format="audio/mp3", autoplay=True))
 
 #------- Thankyou You Bottom - After Answer is complete -------
 st.write("---")
@@ -161,4 +161,4 @@ if st.button("Yes! Thank You", use_container_width=True):
     voice_text = clean_for_voice(thank_you_reply)
     voice_file = speak_auto(voice_text)
     if voice_file:
-        st.audio(voice_file)
+        st.audio(voice_file, format="audio/mp3", autoplay=True)
