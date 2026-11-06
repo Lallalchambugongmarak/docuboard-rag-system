@@ -147,6 +147,7 @@ def clean_for_voice(text):
             text = "Please upload your file first!"
         else:
             text = "Hi, Please ask me a question about your study and topics."
+            
     if "import " in text and "def " in text:
         text = "Please ask me what a specific part does."
     return text[:500]
