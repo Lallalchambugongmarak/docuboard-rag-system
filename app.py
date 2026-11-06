@@ -165,10 +165,9 @@ def speak_auto(text):
 voice_file = speak_auto(voice_text)
 if voice_file:
     st.audio(voice_file, format="audio/mp3", autoplay=True)
-    st.session_state.get("thank_you_clicked", True):
+if not st.session_state.get("thank_you_clicked", True):
     
 #------- Thankyou You Bottom - After Answer is complete -------
-st.write("---")
 st.write("Did she answer your question?")
 
 if st.button("Yes! Thank You", use_container_width=True, on_click=do_thank_you):
