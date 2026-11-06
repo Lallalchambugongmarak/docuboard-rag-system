@@ -73,6 +73,7 @@ def transcribe_audio(audio):
         return ""
 
 #----- ROW 3 - Button -----
+st.session_state.voice_file = None
 if st.button("Ask", use_container_width=True):
     st.session_state.thank_you_clicked = False
     
