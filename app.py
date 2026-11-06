@@ -30,7 +30,7 @@ uploaded_files = st.file_uploader("Upload PDFs", type="pdf", accept_multiple_fil
 
 if uploaded_files:
     file_names = [f.name for f in uploaded_files] if uploaded_files else []
-    selected_file = st.selectbox("Which file do you want ask about?", ["All Files"] + file_names)
+    selected_file = st.selectbox("Which file do you want to ask about?", ["All Files"] + file_names)
     if file_names != st.session_state.last_files:
         with st.spinner("Indexing..."):
             texts = []
@@ -138,7 +138,7 @@ def clean_for_voice(text):
     text = re.sub(r"[*#_{}\[\]()@\"']", " ", text)
     text =re.sub(r"\s+", " ", text).strip()
     if len(text) < 10:
-        text = "Hi, I found your file. Please ask mea question about your study topic, and I will explain it step by step."
+        text = "Hi, I found your file. Please ask me a question about your study topic, and I will explain it step by step."
     return text[:500]
 
     #-------Auto Play With Clean Text-------
