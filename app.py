@@ -101,7 +101,10 @@ if final_query:
     if st.session_state.vectorstore is None:
         st.warning("Please upload PDFs first")
     else:
-        docs = st.session_state.vectorstore.similarity_search(final_value, k=3)
+        if selected_file == "All Files":
+            docs = st.session_state.vectorstore.similarity_search(final_value, k=3)
+        else:
+            docs = st.session_state.vectore.similarity_search(final_value, k=3, filter={"source": selected_file})
         answer_text = "\n\n".join([d.page_content for d in docs])
         final_value = answer_text
         st.markdown("### Answer (from your documents):")
