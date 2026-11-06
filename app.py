@@ -8,6 +8,15 @@ from gtts import gTTS
 import tempfile
 import os
 
+if "thank_you_clicked" not in st.session_state:
+    st.session_state.thank_you_clicked = False
+
+def do_thank_you():
+    st.session_state.thank_you_clicked = True
+
+def do_ask():
+    st.session_state.thank_you_clicked = False
+
 st.set_page_config(page_title="DocuBot")
 st.title("📚Welcome To DocuBot📚 Know Your Files and Documents")
 st.write("🤖 Can I help you? Please upload your documents and files here!")
