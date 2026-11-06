@@ -20,7 +20,8 @@ if 'last_files' not in st.session_state:
 uploaded_files = st.file_uploader("Upload PDFs", type="pdf", accept_multiple_files=True)
 
 if uploaded_files:
-    file_names = [f.name for f in uploaded_files]
+    file_names = [f.name for f in uploaded_files] if uploaded_files else []
+    selected_file = st.selectbox("Which file do you want ask about?", [All Files"] + file_names)
     if file_names != st.session_state.last_files:
         with st.spinner("Indexing..."):
             texts = []
@@ -101,6 +102,7 @@ if final_query:
     if st.session_state.vectorstore is None:
         st.warning("Please upload PDFs first")
     else:
+        selected_file ="All Files"
         if selected_file == "All Files":
             docs = st.session_state.vectorstore.similarity_search(final_value, k=3)
         else:
