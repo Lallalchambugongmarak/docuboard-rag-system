@@ -173,7 +173,7 @@ st.write("Did she answer your question?")
 
 if st.button("Yes! Thank You", use_container_width=True, on_click=do_thank_you):
     st.session_state.thank_you_clicked = True
-    thank_you_reply = "You are most welcome! Thank you for asking me. I am always happy to help you from your PDF."
+    thank_you_reply = "You are most welcome! Thank you for asking me. I am always happy to help you from your PDF files."
     st.write(thank_you_reply)
     voice_text = clean_for_voice(thank_you_reply)
     voice_file = speak_auto(voice_text)
