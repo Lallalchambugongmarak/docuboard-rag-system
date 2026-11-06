@@ -143,9 +143,12 @@ def clean_for_voice(text):
     text = re.sub(r"[*#_{}\[\]()@\"']", " ", text)
     text =re.sub(r"\s+", " ", text).strip()
     if len(text) < 10:
-        text = "Please upload your file first! and ask me a question about your study and topics"
-    else:
-        text = "Hi, Please ask me a question about your study and topics."
+        if st.session_state.get("vectorstore") is None:
+            text = "Please upload your file first!"
+        else:
+            text = "Hi, Please ask me a question about your study and topics."
+    if "import " in text and "def " in text:
+        text = "Please ask me what a specific part does."
     return text[:500]
 
     #-------Auto Play With Clean Text-------
