@@ -167,8 +167,6 @@ def speak_auto(text):
     time.sleep(1)
     async def make_voice():
         await edge_tts.Communicate(text, "en-US-AriaNeural").save(file_name)
-    loop.run_until_complete(make_voice())
-    loop.close()
     
     try:
         asyncio.run(make_voice())
@@ -179,7 +177,7 @@ def speak_auto(text):
     
 voice_file = speak_auto(voice_text)
 if voice_file:
-    if not st.session_state.get("thank_you_clicked", True):
+    if not st.session_state.get("thank_you_clicked", False):
         st.audio(voice_file, format="audio/mp3", autoplay=True)
     
 #------- Thankyou You Bottom - After Answer is complete -------
