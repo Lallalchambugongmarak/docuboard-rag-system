@@ -132,6 +132,7 @@ if final_query:
         #--- Voice Answer ---
 import asyncio
 import edge_tts
+import io
 import time
 import re
 
@@ -166,6 +167,9 @@ def speak_auto(text):
     time.sleep(1)
     async def make_voice():
         await edge_tts.Communicate(text, "en-US-AriaNeural").save(file_name)
+    loop.run_until_complete(make_voice())
+    loop.close()
+    
     try:
         asyncio.run(make_voice())
         return file_name
