@@ -25,7 +25,7 @@ st.write("Upload PDFs, ask questions, and listen to AI answers.")
 # Gemini client
 try:
     client = genai.Client(
-        api_key=st.secrets["GEMINI_API_KEY"]
+        api_key=st.secrets["AQ.Ab8RN6K6IaoVuRTSVw1rtwUBmQ851-Az-JNiTN2DOaGqe_1yUA"]
     )
 except Exception:
     client = None
