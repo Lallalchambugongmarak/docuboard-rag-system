@@ -2,97 +2,163 @@
 import streamlit as st
 import asyncio
 import edge_tts
-import tempfile
-import os
-import re
 import io
+import re
 import speech_recognition as sr
 
 from pypdf import PdfReader
+from google import genai
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
 
-# ---------------- PAGE CONFIG ----------------
-st.set_page_config(page_title="DocuBot")
-st.title("📚 Welcome to DocuBot")
-st.write("🤖 Upload your documents and ask questions!")
+# ==========================================
+# CONFIG
+# ==========================================
+st.set_page_config(page_title="DocuBot AI", page_icon="📚")
+
+st.title("📚 DocuBot AI")
+st.subheader("Your Intelligent PDF Voice Assistant")
+st.write("Upload PDFs, ask questions, and listen to AI answers.")
+
+# Gemini client
+try:
+    client = genai.Client(
+        api_key=st.secrets["GEMINI_API_KEY"]
+    )
+except Exception:
+    client = None
 
 
-# ---------------- SESSION STATE ----------------
-if "vectorstore" not in st.session_state:
-    st.session_state.vectorstore = None
+# ==========================================
+# SESSION STATE
+# ==========================================
+defaults = {
+    "vectorstore": None,
+    "last_files": [],
+    "answer": "",
+    "question": "",
+    "audio_bytes": None,
+    "sources": [],
+}
 
-if "last_files" not in st.session_state:
-    st.session_state.last_files = []
-
-if "answer" not in st.session_state:
-    st.session_state.answer = ""
-
-if "audio_bytes" not in st.session_state:
-    st.session_state.audio_bytes = None
+for key, value in defaults.items():
+    if key not in st.session_state:
+        st.session_state[key] = value
 
 
-# ---------------- TEXT CLEANING ----------------
+# ==========================================
+# SPEECH UTILITIES
+# ==========================================
 def clean_for_voice(text):
-    text = str(text)
-    text = re.sub(r"http\S+", "", text)
+    text = re.sub(r"http\S+", "", str(text))
     text = re.sub(r"[*#_{}\[\]@\"']", " ", text)
-    text = re.sub(r"\s+", " ", text).strip()
-    return text[:1000]
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()[:1500]
 
 
-# ---------------- TEXT TO SPEECH ----------------
 def speak_auto(text):
     text = clean_for_voice(text)
 
     if not text:
         return None
 
-    async def generate_audio():
+    async def generate():
         communicate = edge_tts.Communicate(
             text,
             voice="en-US-AriaNeural"
         )
 
-        audio_data = bytearray()
+        audio = bytearray()
 
         async for chunk in communicate.stream():
             if chunk["type"] == "audio":
-                audio_data.extend(chunk["data"])
+                audio.extend(chunk["data"])
 
-        return bytes(audio_data)
+        return bytes(audio)
 
     try:
-        return asyncio.run(generate_audio())
+        return asyncio.run(generate())
     except Exception as e:
-        st.error(f"Voice generation error: {e}")
+        st.error(f"TTS error: {e}")
         return None
 
 
-# ---------------- SPEECH TO TEXT ----------------
 def transcribe_audio(audio):
     if audio is None:
         return ""
 
+    recognizer = sr.Recognizer()
+
     try:
-        recognizer = sr.Recognizer()
-
         with sr.AudioFile(io.BytesIO(audio.getvalue())) as source:
-            recorded_audio = recognizer.record(source)
+            recorded = recognizer.record(source)
 
-        return recognizer.recognize_google(recorded_audio)
+        return recognizer.recognize_google(recorded)
+
+    except sr.UnknownValueError:
+        st.warning("I could not understand your voice.")
+        return ""
+
+    except sr.RequestError:
+        st.error("Speech recognition service unavailable.")
+        return ""
 
     except Exception as e:
-        st.error(f"Voice recognition failed: {e}")
+        st.error(f"Audio error: {e}")
         return ""
 
 
-# ---------------- PDF UPLOAD ----------------
+# ==========================================
+# GEMINI AI ANSWER
+# ==========================================
+def generate_ai_answer(question, context):
+
+    if client is None:
+        return "Gemini API key is missing. Configure Streamlit secrets."
+
+    prompt = f"""
+You are DocuBot, an intelligent PDF document assistant.
+
+Answer the user's question using ONLY the provided document context.
+
+Rules:
+1. Explain clearly and naturally.
+2. Do not invent information.
+3. If the answer is missing, say it is not found in the uploaded documents.
+4. Summarize long passages instead of copying everything.
+5. Answer in a friendly conversational style.
+6. Make the answer suitable for text-to-speech.
+
+DOCUMENT CONTEXT:
+{context}
+
+USER QUESTION:
+{question}
+
+DOCUBOT ANSWER:
+"""
+
+    try:
+        response = client.models.generate_content(
+            model="gemini-3.8-flash",
+            contents=prompt
+        )
+
+        return response.text or "I could not generate an answer."
+
+    except Exception as e:
+        st.error(f"Gemini error: {e}")
+        return "Sorry, I could not generate an AI answer."
+
+
+# ==========================================
+# PDF UPLOAD + INDEXING
+# ==========================================
 uploaded_files = st.file_uploader(
-    "Upload PDFs",
-    type="pdf",
+    "Upload PDF documents",
+    type=["pdf"],
     accept_multiple_files=True
 )
 
@@ -102,123 +168,140 @@ if uploaded_files:
 
     if file_names != st.session_state.last_files:
 
-        with st.spinner("Indexing PDF documents..."):
+        with st.spinner("Reading and indexing PDFs..."):
 
-            texts = []
+            all_chunks = []
+            all_metadata = []
+
+            splitter = RecursiveCharacterTextSplitter(
+                chunk_size=1000,
+                chunk_overlap=200
+            )
 
             for pdf in uploaded_files:
+
                 reader = PdfReader(pdf)
 
-                raw = "".join(
-                    page.extract_text() or ""
-                    for page in reader.pages
-                )
+                for page_number, page in enumerate(reader.pages):
 
-                splitter = RecursiveCharacterTextSplitter(
-                    chunk_size=1000,
-                    chunk_overlap=200
-                )
+                    text = page.extract_text() or ""
 
-                chunks = splitter.split_text(raw)
-                texts.extend(chunks)
+                    chunks = splitter.split_text(text)
 
-            if texts:
+                    for chunk in chunks:
+                        all_chunks.append(chunk)
+
+                        all_metadata.append({
+                            "source": pdf.name,
+                            "page": page_number + 1
+                        })
+
+            if all_chunks:
 
                 embeddings = HuggingFaceEmbeddings(
                     model_name="sentence-transformers/all-MiniLM-L6-v2"
                 )
 
                 st.session_state.vectorstore = FAISS.from_texts(
-                    texts,
-                    embeddings
+                    all_chunks,
+                    embeddings,
+                    metadatas=all_metadata
                 )
 
                 st.session_state.last_files = file_names
 
                 st.success(
-                    f"Indexed {len(texts)} PDF chunks!"
+                    f"Indexed {len(all_chunks)} chunks "
+                    f"from {len(uploaded_files)} PDFs."
                 )
 
             else:
-                st.error("No readable text found in PDFs.")
+                st.error("No readable PDF text found.")
 
 
-# ---------------- ASK QUESTION ----------------
-st.subheader("🎤 Ask DocuBot")
+# ==========================================
+# QUESTION INPUT
+# ==========================================
+st.divider()
+st.header("🎤 Ask DocuBot")
 
 question_text = st.text_input(
     "Type your question",
-    placeholder="What is this document about?"
+    placeholder="Explain this document..."
 )
 
 audio_value = st.audio_input("Or speak your question")
 
 
-if st.button("Ask DocuBot", use_container_width=True):
+# ==========================================
+# ASK BUTTON
+# ==========================================
+if st.button("🚀 Ask DocuBot", use_container_width=True):
 
-    # Choose text or voice question
-    if audio_value:
-        query = transcribe_audio(audio_value)
-    else:
-        query = question_text.strip()
+    query = (
+        transcribe_audio(audio_value)
+        if audio_value
+        else question_text.strip()
+    )
 
     if not query:
-        st.warning("Please type or speak a question.")
+        st.warning("Please enter or speak a question.")
 
     elif st.session_state.vectorstore is None:
         st.error("Please upload PDFs first.")
 
     else:
 
-        with st.spinner("Searching your documents..."):
+        st.session_state.question = query
+
+        with st.spinner("Searching your PDFs..."):
 
             docs = st.session_state.vectorstore.similarity_search(
                 query,
-                k=3
+                k=5
             )
 
-            if docs:
+            context = "\n\n".join(
+                doc.page_content for doc in docs
+            )
 
-                # Retrieved document context
-                context = "\n\n".join(
-                    doc.page_content for doc in docs
-                )
+            st.session_state.sources = docs
 
-                answer = (
-                    f"Your question: {query}\n\n"
-                    f"According to your documents:\n\n"
-                    f"{context}"
-                )
+        # Generate real AI answer
+        with st.spinner("Gemini is thinking..."):
 
-                st.session_state.answer = answer
+            answer = generate_ai_answer(
+                query,
+                context
+            )
 
-                # Generate voice answer
-                with st.spinner("Generating voice answer..."):
+            st.session_state.answer = answer
 
-                    audio_bytes = speak_auto(answer)
+        # Generate voice answer
+        with st.spinner("Generating voice answer..."):
 
-                    st.session_state.audio_bytes = audio_bytes
-
-            else:
-                st.session_state.answer = (
-                    "I could not find relevant information "
-                    "in your documents."
-                )
-                st.session_state.audio_bytes = speak_auto(
-                    st.session_state.answer
-                )
+            st.session_state.audio_bytes = speak_auto(
+                answer
+            )
 
 
-# ---------------- DISPLAY ANSWER ----------------
+# ==========================================
+# DISPLAY AI ANSWER
+# ==========================================
 if st.session_state.answer:
 
-    st.markdown("### 📖 DocuBot Answer")
+    st.divider()
 
-    st.write(st.session_state.answer)
+    st.subheader("🤖 DocuBot AI Answer")
 
+    st.write("Question:", st.session_state.question)
+
+    st.markdown(st.session_state.answer)
+
+    # AUDIO OUTPUT
     if st.session_state.audio_bytes:
 
-        st.markdown("### 🔊 Voice Answer")
+        st.subheader("🔊 Listen to DocuBot")
 
         st.audio(
             st.session_state.audio_bytes,
@@ -226,24 +309,47 @@ if st.session_state.answer:
             autoplay=True
         )
 
+    # SOURCES
+    with st.expander("📄 View PDF Sources"):
 
-# ---------------- THANK YOU ----------------
+        for i, doc in enumerate(st.session_state.sources):
+
+            source = doc.metadata.get(
+                "source",
+                "Unknown PDF"
+            )
+
+            page = doc.metadata.get(
+                "page",
+                "Unknown page"
+            )
+
+            st.caption(
+                f"Source {i+1}: {source} | Page {page}"
+            )
+
+            st.write(doc.page_content)
+
+
+# ==========================================
+# THANK YOU
+# ==========================================
 st.divider()
 
 if st.button("❤️ Yes! Thank You", use_container_width=True):
 
-    thank_you_reply = (
+    reply = (
         "You are most welcome! "
-        "Thank you for asking me. "
-        "I am always happy to help you "
-        "with your PDF documents."
+        "I am DocuBot, and I am always happy "
+        "to help you understand your documents."
     )
 
-    st.success(thank_you_reply)
+    st.success(reply)
 
-    thank_you_audio = speak_auto(thank_you_reply)
+    thank_you_audio = speak_auto(reply)
 
     if thank_you_audio:
+
         st.audio(
             thank_you_audio,
             format="audio/mp3",
