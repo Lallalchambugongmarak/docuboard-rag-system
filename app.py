@@ -7,7 +7,6 @@ import speech_recognition as sr
 from gtts import gTTS
 import tempfile
 import os
-answer_text = ""
 
 if "thank_you_clicked" not in st.session_state:
     st.session_state.thank_you_clicked = False
