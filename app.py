@@ -147,10 +147,10 @@ def clean_for_voice(text):
         if st.session_state.get("vectorstore") is None:
             text = "Please upload your file first!"
         else:
-            text = "Hi, Please ask in the Agent a question about your study and topics."
+            text = "Hi, Please ask in the Agent what a question about your study and topics."
             
     if "import " in text and "def " in text:
-        text = "Please ask me what a specific part does."
+        text = "Hi, Please ask in the Agent, what a specific part does!"
     return text[:500]
 
     #-------Auto Play With Clean Text-------
