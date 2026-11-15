@@ -167,7 +167,7 @@ def speak_auto(text):
     time.sleep(1)
     async def generate_voice(text):
         text = text[:3000]
-        await edge_tts.Communicate(text, "en-US-AriaNeural").save(file_name)
+        communicate = edge_tts.Communicate(text, "en-US-AriaNeural").save(file_name)
         mp3_bytes = b""
         async for chunk in communicate.stream():
             if chunk["type"] == "audio":
@@ -180,7 +180,7 @@ if answer_text:
         with st.spinner("Generating voice..."):
             try:
                 audio_bytes = asyncio.run(generate_voice(answer_text))
-                st.studio(audio_bytes, format="audio/mp3")
+                st.audio(audio_bytes, format="audio/mp3")
             except Exception as e:
                 st.error(f"Voice error: {e}")
     
