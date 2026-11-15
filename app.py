@@ -168,7 +168,7 @@ def speak_auto(text):
     async def generate_voice(text):
         text = text[:3000]
         await edge_tts.Communicate(text, "en-US-AriaNeural").save(file_name)
-        mp3_bytes = b ""
+        mp3_bytes = b""
         async for chunk in communicate.stream():
             if chunk["type"] == "audio":
                 mp3_bytes += chunk["data"]
