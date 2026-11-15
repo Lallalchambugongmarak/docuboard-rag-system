@@ -73,6 +73,61 @@ def transcribe_audio(audio):
         return ""
 
 #----- ROW 3 - Button -----
+#----- ROW 3 - Button -----
+if st.button("Ask", use_container_width=True):
+    st.session_state.thank_you_clicked = False
+
+    # Voice question or text question
+    if audio_value:
+        final_query = transcribe_audio(audio_value)
+    else:
+        final_query = question_text.strip()
+
+    if not final_query:
+        st.warning("Please type or speak your question.")
+
+    elif st.session_state.vectorstore is None:
+        st.error("Please upload your file first!")
+
+    else:
+        st.write(f"You Asked: {final_query}")
+
+        with st.spinner("Searching your PDF..."):
+            docs = st.session_state.vectorstore.similarity_search(
+                final_query,
+                k=3
+            )
+
+            answer_text = "\n\n".join(
+                [d.page_content for d in docs]
+            )
+
+        # Display answer from PDF
+        st.markdown("### 📖 Answer From Your PDF")
+        st.markdown(answer_text)
+
+        # Display sources
+        st.markdown("---")
+        for i, d in enumerate(docs):
+            st.caption(
+                f"Source {i+1}: {d.page_content[:1000]}..."
+            )
+
+        # Voice answer from PDF
+        voice_text = clean_for_voice(answer_text)
+        voice_file = speak_auto(voice_text)
+
+        if voice_file:
+            st.markdown("### 🔊 DocuBot Voice Answer")
+            st.audio(
+                voice_file,
+                format="audio/mp3",
+                autoplay=True
+            )
+
+
+
+
 if st.button("Ask", use_container_width=True):
     st.session_state.thank_you_clicked = False
     
