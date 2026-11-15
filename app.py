@@ -167,6 +167,11 @@ def speak_auto(text):
     time.sleep(1)
     async def make_voice():
         await edge_tts.Communicate(text, "en-US-AriaNeural").save(file_name)
+        mp3_bytes = b ""
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                mp3_bytes += chunk["data"]
+        return mp3_bytes
     
     try:
         asyncio.run(make_voice())
