@@ -7,7 +7,6 @@ import speech_recognition as sr
 from gtts import gTTS
 import tempfile
 import os
-answer_text = ""
 
 if "thank_you_clicked" not in st.session_state:
     st.session_state.thank_you_clicked = False
@@ -166,24 +165,15 @@ def speak_auto(text):
         return None
     file_name = f"voice_{int(time.time())}.mp3"
     time.sleep(1)
-    async def generate_voice(text):
-        text = text[:3000]
-        communicate = edge_tts.Communicate(text, "en-US-AriaNeural").save(file_name)
-        mp3_bytes = b""
-        async for chunk in communicate.stream():
-            if chunk["type"] == "audio":
-                mp3_bytes += chunk["data"]
-        return mp3_bytes
-
-if answer_voice:
-    st.markdown("### Voice Answer (from your documents):")
-    if st.button(" Listen Voice Answer"):
-        with st.spinner("Generating voice..."):
-            try:
-                audio_bytes = asyncio.run(generate_voice(answer_text))
-                st.audio(audio_bytes, format="audio/mp3")
-            except Exception as e:
-                st.error(f"Voice error: {e}")
+    async def make_voice():
+        await edge_tts.Communicate(text, "en-US-AriaNeural").save(file_name)
+    
+    try:
+        asyncio.run(make_voice())
+        return file_name
+    except Exception as e:
+        st.error(f"VOICE ERROR: {e}")
+        return None
     
 voice_file = speak_auto(voice_text)
 if voice_file:
@@ -202,3 +192,4 @@ if st.button("Yes! Thank You", use_container_width=True, on_click=do_thank_you):
     voice_file = speak_auto(voice_text)
     if voice_file:
         st.audio(voice_file, format="audio/mp3", autoplay=True)
+
