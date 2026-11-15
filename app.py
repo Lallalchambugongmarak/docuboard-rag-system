@@ -174,8 +174,8 @@ def speak_auto(text):
                 tts.save(fp.name)
                 st.audio(fp.name, format="audio/mp3", autoplay=True)
                 st.caption("Playing Voice Answer")
-        except Exception as e:
-            st.error(f"gTTS Error: {e}")
+    except Exception as e:
+        st.error(f"gTTS Error: {e}")
     
 voice_file = speak_auto(voice_text)
 if voice_file:
