@@ -183,14 +183,6 @@ if answer_text:
                 st.studio(audio_bytes, format="audio/mp3")
             except Exception as e:
                 st.error(f"Voice error: {e}")
-
-    
-    try:
-        asyncio.run(make_voice())
-        return file_name
-    except Exception as e:
-        st.error(f"VOICE ERROR: {e}")
-        return None
     
 voice_file = speak_auto(voice_text)
 if voice_file:
