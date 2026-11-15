@@ -172,6 +172,17 @@ def speak_auto(text):
             if chunk["type"] == "audio":
                 mp3_bytes += chunk["data"]
         return mp3_bytes
+
+if answer_text:
+    st.markdown("### Voice Answer (from your documents):")
+    if st.button(" Listen Voice Answer"):
+        with st.spinner("Generating voice..."):
+            try:
+                audio_bytes = asyncio.run(generate_voice(answer_text))
+                st.studio(audio_bytes, format="audio/mp3")
+            except Exception as e:
+                st.error(f"Voice error: {e}")
+
     
     try:
         asyncio.run(make_voice())
