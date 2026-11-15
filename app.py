@@ -174,7 +174,7 @@ def speak_auto(text):
                 mp3_bytes += chunk["data"]
         return mp3_bytes
 
-if answer_text:
+if answer_voice:
     st.markdown("### Voice Answer (from your documents):")
     if st.button(" Listen Voice Answer"):
         with st.spinner("Generating voice..."):
