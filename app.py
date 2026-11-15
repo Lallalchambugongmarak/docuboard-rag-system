@@ -176,13 +176,6 @@ def speak_auto(text):
                 st.caption("Playing Voice Answer")
         except Exception as e:
             st.error(f"gTTS Error: {e}")
-
-    
-    try:
-        asyncio.run(make_voice())
-        return file_name
-        st.error(f"VOICE ERROR: {e}")
-        return None
     
 voice_file = speak_auto(voice_text)
 if voice_file:
