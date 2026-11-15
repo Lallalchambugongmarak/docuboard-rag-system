@@ -181,7 +181,6 @@ def speak_auto(text):
     try:
         asyncio.run(make_voice())
         return file_name
-    except Exception as e:
         st.error(f"VOICE ERROR: {e}")
         return None
     
