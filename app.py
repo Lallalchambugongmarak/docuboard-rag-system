@@ -147,7 +147,7 @@ def clean_for_voice(text):
         if st.session_state.get("vectorstore") is None:
             text = "Please upload your file first!"
         else:
-            text = "Hi, Please ask the Agent a question about your study and topics."
+            text = "Hi, Please ask in the Agent a question about your study and topics."
             
     if "import " in text and "def " in text:
         text = "Please ask me what a specific part does."
@@ -196,7 +196,7 @@ st.write("Did she answer your question?")
 
 if st.button("Yes! Thank You", use_container_width=True, on_click=do_thank_you):
     st.session_state.thank_you_clicked = True
-    thank_you_reply = "Hi I'm Mina, You are most welcome! Thank you for asking us. We're always happy to help you from your PDF files."
+    thank_you_reply = "Hi I'm Mina, You are most welcome! Thank you for asking us. We're always happy to help you."
     st.write(thank_you_reply)
     voice_text = clean_for_voice(thank_you_reply)
     voice_file = speak_auto(voice_text)
