@@ -50,13 +50,13 @@ if uploaded_files:
 st.subheader("Ask Your Question with Voice or Text")
 
 #----- ROW 1 - Type -----
-st.write("Type a Question")
+st.write("Type a Questions")
 question_text = st.text_input("Type a Question", placeholder="What is document about?", label_visibility="collapsed")
 
 st.write("") #empty space
 
 #----- ROW 2 - Voice -----
-st.write("Speak Your Question")
+st.write("Speak Your Questions")
 audio_value = st.audio_input("Speak Your Question", label_visibility="collapsed", key="voice_q")
 
 #-------- Audio Text -----------
@@ -169,7 +169,7 @@ def speak_auto(text):
         await edge_tts.Communicate(text, "en-US-AriaNeural").save(file_name)
         
     try:
-            tts = gTTS(text=answer_text[:4000], lang='en') # first 4000 chars only
+            tts = gTTS(text=text[:4000], lang='en') # first 4000 chars only
             with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
                 tts.save(fp.name)
                 import base64
@@ -177,7 +177,7 @@ def speak_auto(text):
                     b64 = base64.b64encode(f.read()).decode()
                 st.markdown(f'<audio controls autoplay src="data:audio/mp3;base64,{b64}"></audio>', unsafe_allow_html=True)
 #🚫                st.audio(fp.name, format="audio/mp3", autoplay=True, key=f"audio_{file_name}")
-                st.caption("Playing Voice Answer")
+#🚫                st.caption("Playing Voice Answer")
     except Exception as e:
         st.error(f"gTTS Error: {e}")
     
