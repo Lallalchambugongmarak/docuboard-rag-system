@@ -172,7 +172,7 @@ def speak_auto(text):
             tts = gTTS(text=answer_text[:4000], lang='en') # first 4000 chars only
             with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
                 tts.save(fp.name)
-                st.audio(fp.name, format="audio/mp3", autoplay=True)
+                st.audio(fp.name, format="audio/mp3", autoplay=True, key=f"audio_{file_name}")
                 st.caption("Playing Voice Answer")
     except Exception as e:
         st.error(f"gTTS Error: {e}")
