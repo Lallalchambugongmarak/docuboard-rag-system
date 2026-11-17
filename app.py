@@ -169,20 +169,24 @@ def speak_auto(text):
         await edge_tts.Communicate(text, "en-US-AriaNeural").save(file_name)
         
     try:
-            tts = gTTS(text=text[:4000], lang='en') # first 4000 chars only
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
-                tts.save(fp.name)
-                import base64
-                with open(fp.name, "rb") as f:
-                    b64 = base64.b64encode(f.read()).decode()
-                st.markdown(f'<audio controls autoplay src="data:audio/mp3;base64,{b64}"></audio>', unsafe_allow_html=True)
-#🚫                st.audio(fp.name, format="audio/mp3", autoplay=True, key=f"audio_{file_name}")
-#🚫                st.caption("Playing Voice Answer")
+        #  Only speak if this answer is from uploaded file
+        if not st.session_state.get("is_uploaded_question", False):
+            return None
+            
+        tts = gTTS(text=text[:4000], lang='en') # first 4000 chars only
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
+            tts.save(fp.name)
+            import base64
+            with open(fp.name, "rb") as f:
+                b64 = base64.b64encode(f.read()).decode()
+            st.markdown(f'<audio controls autoplay src="data:audio/mp3;base64,{b64}"></audio>', unsafe_allow_html=True)
+#🚫            st.audio(fp.name, format="audio/mp3", autoplay=True, key=f"audio_{file_name}")
+#🚫            st.caption("Playing Voice Answer")
     except Exception as e:
         st.error(f"gTTS Error: {e}")
     
     try:
-        if not st.session_state.get("is_uploaded_question", True):
+        if not st.session_state.get("is_uploaded_question", False):
             return None
         asyncio.run(make_voice())
         return file_name
