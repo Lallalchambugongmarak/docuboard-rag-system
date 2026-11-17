@@ -180,13 +180,13 @@ def speak_auto(text):
             with open(fp.name, "rb") as f:
                 b64 = base64.b64encode(f.read()).decode()
             st.markdown(f'<audio controls autoplay src="data:audio/mp3;base64,{b64}"></audio>', unsafe_allow_html=True)
-            st.audio(fp.name, format="audio/mp3", autoplay=True, key=f"audio_{file_name}")
-            st.caption("Playing Voice Answer")
+#🚫            st.audio(fp.name, format="audio/mp3", autoplay=True, key=f"audio_{file_name}")
+#🚫            st.caption("Playing Voice Answer")
     except Exception as e:
         st.error(f"gTTS Error: {e}")
     
     try:
-        if not st.session_state.get("is_uploaded_question", False):
+        if not st.session_state.get("is_uploaded_question", True):
             return None
         asyncio.run(make_voice())
         return file_name
