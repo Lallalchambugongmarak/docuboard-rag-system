@@ -170,7 +170,7 @@ def speak_auto(text):
         
     try:
         #  Only speak if this answer is from uploaded file
-        if not st.session_state.get("is_uploaded_question", False):
+        if not st.session_state.get("is_uploaded_question", True):
             return None
             
         tts = gTTS(text=text[:4000], lang='en') # first 4000 chars only
