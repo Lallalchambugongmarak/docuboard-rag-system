@@ -170,7 +170,7 @@ def speak_auto(text):
         
     try:
         #  Only speak if this answer is from uploaded file
-        if not st.session_state.get("is_uploaded_question", False):
+        if not st.session_state.get("is_uploaded_question", True):
             return None
             
         tts = gTTS(text=text[:4000], lang='en') # first 4000 chars only
@@ -186,7 +186,7 @@ def speak_auto(text):
         st.error(f"gTTS Error: {e}")
     
     try:
-        if not st.session_state.get("is_uploaded_question", True):
+        if not st.session_state.get("is_uploaded_question", False):
             return None
         asyncio.run(make_voice())
         return file_name
