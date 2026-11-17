@@ -73,7 +73,7 @@ def transcribe_audio(audio):
         return ""
 
 #----- ROW 3 - Button -----
-if st.button("Ask", use_container_width=False):
+if st.button("Ask", use_container_width= True):
     st.session_state.thank_you_clicked = False
     
     if question_text:
