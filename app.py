@@ -193,9 +193,7 @@ def speak_auto(text):
     except Exception as e:
         st.error(f"VOICE ERROR: {e}")
         return None
-
-def speak_extraction_(full_text):
-    
+        
     voice_file = speak_auto(voice_text)
 if voice_file:
     if not st.session_state.get("thank_you_clicked", False):
