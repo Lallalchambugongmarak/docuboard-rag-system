@@ -182,6 +182,8 @@ def speak_auto(text):
         st.error(f"gTTS Error: {e}")
     
     try:
+        if not st.session_state.get("is_uploaded_question", False):
+            return None
         asyncio.run(make_voice())
         return file_name
     except Exception as e:
@@ -205,5 +207,5 @@ if st.button("Yes! Thank You", use_container_width=True, on_click=do_thank_you):
     voice_text = clean_for_voice(thank_you_reply)
     voice_file = speak_auto(voice_text)
     if voice_file:
-        st.audio(voice_file, format="audio/mp3", autoplay=True, key=f"audio_{file_name}")
+        st.audio(voice_file, format="audio/mp3", autoplay=True)
 
