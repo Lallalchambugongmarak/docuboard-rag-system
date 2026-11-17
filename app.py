@@ -173,7 +173,7 @@ def speak_auto(text):
         if not st.session_state.get("is_uploaded_question", True):
             return None
             
-        tts = gTTS(text=text[:4000], lang='en') # first 4000 chars only
+        tts = gTTS(text=text[:500000], lang='en') # first 4000 chars only
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
             tts.save(fp.name)
             import base64
@@ -186,7 +186,7 @@ def speak_auto(text):
         st.error(f"gTTS Error: {e}")
     
     try:
-        if not st.session_state.get("is_uploaded_question",True):
+        if not st.session_state.get("is_uploaded_question", False):
             return None
         asyncio.run(make_voice())
         return file_name
