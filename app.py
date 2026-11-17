@@ -176,7 +176,7 @@ def speak_auto(text):
                 with open(fp.name, "rb") as f:
                     b64 = base64.b64encode(f.read()).decode()
                 st.markdown(f'<audio controls autoplay src="data:audio/mp3;base64,{b64}"></audio>', unsafe_allow_html=True)
-                st.audio(fp.name, format="audio/mp3", autoplay=True, key=f"audio_{file_name}")
+#🚫                st.audio(fp.name, format="audio/mp3", autoplay=True, key=f"audio_{file_name}")
 #🚫                st.caption("Playing Voice Answer")
     except Exception as e:
         st.error(f"gTTS Error: {e}")
@@ -192,7 +192,7 @@ def speak_auto(text):
 voice_file = speak_auto(voice_text)
 if voice_file:
     if not st.session_state.get("thank_you_clicked", False):
-        st.audio(voice_file, format="audio/mp3", autoplay=True)
+        st.audio(voice_file, format="audio/mp3", autoplay=True, key=f"audio_{file_name}")
     
 #------- Thankyou You Bottom - After Answer is complete -------
 st.write("---")
@@ -205,5 +205,5 @@ if st.button("Yes! Thank You", use_container_width=True, on_click=do_thank_you):
     voice_text = clean_for_voice(thank_you_reply)
     voice_file = speak_auto(voice_text)
     if voice_file:
-        st.audio(voice_file, format="audio/mp3", autoplay=True)
+        st.audio(voice_file, format="audio/mp3", autoplay=True, key=f"audio_{file_name}")
 
