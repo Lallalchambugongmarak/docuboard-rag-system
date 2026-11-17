@@ -186,7 +186,7 @@ def speak_auto(text):
         st.error(f"gTTS Error: {e}")
     
     try:
-        if not st.session_state.get("is_uploaded_question", False):
+        if not st.session_state.get("is_uploaded_question", True):
             return None
         asyncio.run(make_voice())
         return file_name
