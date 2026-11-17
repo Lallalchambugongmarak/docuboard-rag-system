@@ -173,7 +173,7 @@ def speak_auto(text):
         if not st.session_state.get("is_uploaded_question", True):
             return None
             
-        tts = gTTS(text=text[:500000], lang='en') # first 4000 chars only
+        tts = gTTS(text=text[:4000], lang='en') # first 4000 chars only
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
             tts.save(fp.name)
             import base64
