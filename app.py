@@ -166,7 +166,7 @@ def speak_auto(text):
     file_name = f"voice_{int(time.time())}.mp3"
     time.sleep(1)
     async def make_voice():
-        await edge_tts.Communicate(text, "hi-IN-MadhurNeural").save(file_name)
+        await edge_tts.Communicate(text, "hi-IN-SwaraNeural").save(file_name)
         
     try:
         #  Only speak if this answer is from uploaded file
